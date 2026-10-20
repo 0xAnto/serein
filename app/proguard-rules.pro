@@ -1,0 +1,4 @@
+-keep class com.serein.app.MainActivity { *; }
+-keep class com.serein.app.PlaybackService { *; }
+-keep class com.serein.app.SereinWidget { *; }
+-keep class com.serein.app.SleepWidget { *; }

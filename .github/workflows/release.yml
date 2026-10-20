@@ -1,0 +1,82 @@
+name: Release APK
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == '0xAnto/serein'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate version and release notes
+        id: version
+        env:
+          RELEASE_REF_TYPE: ${{ github.ref_type }}
+          RELEASE_REF_NAME: ${{ github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os, re
+          text = Path('app/build.gradle').read_text()
+          version = re.search(r"versionName '([0-9]+\.[0-9]+\.[0-9]+)'", text).group(1)
+          tag = f'v{version}'
+          if os.environ['RELEASE_REF_TYPE'] == 'tag' and os.environ['RELEASE_REF_NAME'] != tag:
+              raise SystemExit('Git tag does not match versionName in app/build.gradle')
+          notes = f'docs/releases/{tag}.md'
+          if not Path(notes).is_file():
+              raise SystemExit(f'Missing release notes: {notes}')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'tag={tag}\nnotes={notes}\n')
+          PY
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK and audio test tools
+        run: |
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      - name: Run tests
+        run: ./tests/run.sh
+      - name: Build and verify signed APK
+        env:
+          SEREIN_KEYSTORE_BASE64: ${{ secrets.SEREIN_KEYSTORE_BASE64 }}
+          SEREIN_KEYSTORE_PASSWORD: ${{ secrets.SEREIN_KEYSTORE_PASSWORD }}
+          SEREIN_KEY_ALIAS: ${{ secrets.SEREIN_KEY_ALIAS }}
+          SEREIN_KEY_PASSWORD: ${{ secrets.SEREIN_KEY_PASSWORD }}
+        run: |
+          : "${SEREIN_KEYSTORE_BASE64:?Configure release signing secrets first; see RELEASING.md}"
+          umask 077
+          export SEREIN_KEYSTORE_FILE="$RUNNER_TEMP/serein-release.p12"
+          trap 'rm -f "$SEREIN_KEYSTORE_FILE"' EXIT
+          printf '%s' "$SEREIN_KEYSTORE_BASE64" | base64 --decode > "$SEREIN_KEYSTORE_FILE"
+          ./build-release.sh
+      - name: Publish APK and checksums
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_NOTES: ${{ steps.version.outputs.notes }}
+        run: |
+          if gh release view "$RELEASE_TAG" --json isDraft > "$RUNNER_TEMP/release.json"; then
+            python3 -c 'import json,sys; sys.exit(0 if json.load(open(sys.argv[1]))["isDraft"] else "This version is already published; bump the version.")' "$RUNNER_TEMP/release.json"
+          else
+            gh release create "$RELEASE_TAG" --target "$GITHUB_SHA" --draft \
+              --title "Serein $RELEASE_TAG" --notes-file "$RELEASE_NOTES"
+          fi
+          gh release upload "$RELEASE_TAG" build/release/Serein.apk build/release/SHA256SUMS --clobber
+          gh release edit "$RELEASE_TAG" --draft=false --latest --notes-file "$RELEASE_NOTES"

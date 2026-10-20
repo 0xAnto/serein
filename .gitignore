@@ -1,0 +1,15 @@
+build/
+app/build/
+.gradle/
+.idea/
+local.properties
+test-signing/
+*.iml
+.DS_Store
+release-signing/
+*.jks
+*.keystore
+*.p12
+*.pem
+.env
+.env.*

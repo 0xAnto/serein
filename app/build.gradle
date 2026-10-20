@@ -1,0 +1,21 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.serein.app'
+    compileSdk 36
+    defaultConfig { applicationId 'com.serein.app'; minSdk 31; targetSdk 36; versionCode 2; versionName '1.1.0' }
+    signingConfigs {
+        debug { if (file('../test-signing/serein-test.jks').exists()) { storeFile file('../test-signing/serein-test.jks'); storePassword 'android'; keyAlias 'serein-test'; keyPassword 'android' } }
+        release {
+            if (System.getenv('SEREIN_KEYSTORE_FILE')) {
+                storeFile file(System.getenv('SEREIN_KEYSTORE_FILE'))
+                storeType 'PKCS12'
+                storePassword System.getenv('SEREIN_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('SEREIN_KEY_ALIAS')
+                keyPassword System.getenv('SEREIN_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes { release { signingConfig signingConfigs.release; minifyEnabled true; shrinkResources true; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+    androidResources { noCompress 'ogg' }
+}

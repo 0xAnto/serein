@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">#b5c5a0</item>
+        <item name="android:textColorPrimary">#cfd8c8</item>
+        <item name="android:textColorSecondary">#a1af99</item>
+        <item name="android:windowBackground">#252c28</item>
+        <item name="android:statusBarColor">#252c28</item>
+        <item name="android:navigationBarColor">#252c28</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowSplashScreenBackground">#252c28</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+    </style>
+    <style name="SereinDialog" parent="android:style/Theme.Material.Dialog.Alert">
+        <item name="android:colorAccent">#b5c5a0</item>
+        <item name="android:textColorPrimary">#cfd8c8</item>
+        <item name="android:textColorSecondary">#a1af99</item>
+        <item name="android:colorBackground">#2d362f</item>
+    </style>
+    <style name="SereinDialogLight" parent="android:style/Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorAccent">#62774f</item>
+        <item name="android:textColorPrimary">#354032</item>
+        <item name="android:textColorSecondary">#75816d</item>
+        <item name="android:colorBackground">#f5f4ed</item>
+    </style>
+    <color name="icon_background">#dbe3cf</color>
+    <string name="app_name">Serein</string>
+    <string name="widget_player_description">Playback, saved timer, and three sound presets.</string>
+    <string name="widget_sleep_description">Start a sleep mix and manage its countdown.</string>
+</resources>
