@@ -1,4 +1,4 @@
-<img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Serein logo" width="96" height="96">
+<img src="docs/assets/serein-logo.png" alt="Serein logo" width="96" height="96">
 
 # Serein
 
