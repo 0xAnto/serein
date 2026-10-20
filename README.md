@@ -1,17 +1,12 @@
 <div align="center">
     <img src="docs/assets/serein-logo.png" alt="Serein" width="96" height="96">
     <h1>Serein</h1>
-</div>
-
-A quiet space for sleep, focus, and unwinding. Serein is a native Android ambient sound mixer with twelve bundled soundscapes, saved mixes, a sleep timer, breathing exercises, and home-screen widgets.
+    <p>A quiet space for sleep, focus, and unwinding.</p>
 
 [Download APK](https://github.com/0xAnto/serein/releases/latest/download/Serein.apk) · [All releases](https://github.com/0xAnto/serein/releases) · [Report a bug](https://github.com/0xAnto/serein/issues)
-
-**Android 12 or newer · Fully offline · No account, ads, or analytics · MIT licensed**
+</div>
 
 ![Serein interface previews showing Home with saved mixes, the sound mixer, guided breathing, and night mode.](docs/assets/serein-preview.png)
-
-*Promotional interface mockups; actual app appearance may vary.*
 
 ## Download and install
 
