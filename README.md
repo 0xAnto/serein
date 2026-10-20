@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="docs/assets/serein-logo.png" alt="Serein" width="96" height="96">
+    <img src="docs/assets/serein-logo.png" alt="Serein" width="96" height="96">
+    <h1>Serein</h1>
 </div>
-# Serein
 
 A quiet space for sleep, focus, and unwinding. Serein is a native Android ambient sound mixer with twelve bundled soundscapes, saved mixes, a sleep timer, breathing exercises, and home-screen widgets.
 
